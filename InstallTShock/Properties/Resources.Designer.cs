@@ -111,6 +111,31 @@ namespace InstallTShock.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to @echo on
+        ///cd &quot;\Terraria TShock&quot;
+        ///ECHO ON
+        ///title Terraria Server
+        ///
+        ///:start
+        ///cls
+        ///
+        ///TerrariaServer.exe -maxplayers 8 -ip 192.168.0.33 -config TShockserverconfig.txt -world Master
+        ///@echo.
+        ///@echo Restarting server...
+        ///@echo.
+        ///
+        ///echo Waiting 5 seconds - CTRL-C to get out
+        ///#timeout /t 5
+        ///
+        ///goto start.
+        /// </summary>
+        internal static string TShock {
+            get {
+                return ResourceManager.GetString("TShock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap user {
