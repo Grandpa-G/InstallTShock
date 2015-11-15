@@ -482,9 +482,89 @@ namespace InstallTShock
             }
         }
 
-        private void btnCreateBAT_Click(object sender, EventArgs e)
+        private void btnModifyBAT_Click(object sender, EventArgs e)
         {
-            newBATFile();
+            string batFile = InstallTShock.Properties.Resources.TShock;
+            string driveLetter = "";
+            string delay = "";
+
+            if (txtBATFolder.Text.Length == 0)
+            {
+                MessageBox.Show("No location specified.", PROGRAMNAME, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            if (txtDelay.Text.Length == 0)
+                delay = "";
+            else
+                delay = txtDelay.Text;
+
+            if (txtBATFolder.Text.Length == 0)
+                driveLetter = "C:";
+            else
+                driveLetter = txtBATFolder.Text.Substring(0, 2);
+
+            string folder = txtBATFolder.Text;
+
+            string commandLine = "";
+            if (chkIgnoreVersion.Checked)
+                commandLine += " -ignoreversion";
+            if (txtIP.Text.Length > 0)
+                commandLine += " -ip " + txtIP.Text;
+            if (txtPort.Text.Length > 0)
+                commandLine += " -port " + txtPort.Text;
+            if (txtMaxPlayers.Text.Length > 0)
+                commandLine += " -maxplayers " + txtMaxPlayers.Text;
+
+            if (txtWorld.Text.Length > 0)
+                commandLine += " -world " + txtWorld.Text;
+            if (txtWorldPath.Text.Length > 0)
+                commandLine += " -worldpath \"" + txtWorldPath.Text + "\"";
+            if (txtConfigFile.Text.Length > 0)
+                commandLine += " -config \"" + txtConfigFile.Text + "\"";
+
+            if (txtTShockConfigPath.Text.Length > 0)
+                commandLine += " -configpath \"" + txtTShockConfigPath.Text + "\"";
+            if (chkLogClear.Checked)
+                commandLine += " -logclear";
+
+            bool timeoutFound = false;
+            bool commandFound = false;
+            string[] commandFile = txtBAT.Text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            txtBAT.Text = "";
+            for (int i = 0; i < commandFile.Length; i++)
+            {
+                if (commandFile[i].ToLower().Contains("terrariaserver.exe"))
+                {
+                    commandFound = true;
+                    string[] commandLineArgs = commandFile[i].Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    commandFile[i] = commandLineArgs[0] + " " + commandLine;
+                }
+
+                if (commandFile[i].ToLower().Contains("timeout"))
+                {
+                    string[] commandLineArgs = commandFile[i].Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (delay.Length > 0) {
+                        timeoutFound = true;
+                        commandFile[i] = commandLineArgs[0] + " /t " + delay;
+                    }
+                    else
+                        commandFile[i] = "";
+                }
+                if (commandFile[i].ToLower().Contains("echo waiting"))
+                {
+                    string[] commandLineArgs = commandFile[i].Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (delay.Length > 0)
+                        commandFile[i] = "echo Waiting " + delay + " seconds - CTRL-C to get out";
+                    else
+                        commandFile[i] = "";
+                }
+                txtBAT.Text += commandFile[i] + "\r\n";
+            }
+            if(delay.Length > 0 && !timeoutFound)
+                MessageBox.Show("No timeout command in file.", PROGRAMNAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!commandFound)
+                MessageBox.Show("No TerrariServer.exe command in file.", PROGRAMNAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void btnSaveBAT_Click(object sender, EventArgs e)

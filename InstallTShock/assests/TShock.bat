@@ -13,6 +13,6 @@ TerrariaServer.exe `commandline
 @echo.
 
 echo Waiting `delay seconds - CTRL-C to get out
-#timeout /t `delay
+timeout /t `delay
 
 goto start

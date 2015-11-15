@@ -545,7 +545,7 @@
             this.btnModifyBAT.TabIndex = 7;
             this.btnModifyBAT.Text = "Modify";
             this.btnModifyBAT.UseVisualStyleBackColor = true;
-            this.btnModifyBAT.Click += new System.EventHandler(this.btnCreateBAT_Click);
+            this.btnModifyBAT.Click += new System.EventHandler(this.btnModifyBAT_Click);
             // 
             // txtBAT
             // 
